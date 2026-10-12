@@ -92,3 +92,43 @@ The check confirms everything that can be read from your files:
 - a skill at `skills/<name>/SKILL.md` and a hook at `hooks/hooks.json`, with no hardcoded absolute paths (use `${CLAUDE_PLUGIN_ROOT}`);
 - `marketplace.json` is valid and lists your plugin under the same `name` as `plugin.json`;
 - `README.md` and a real `NOTES.md` are present.
+
+---
+
+## Plugin: localization-toolkit
+
+A Claude Code plugin for localization and content localization. It bundles two scoped subagents that work on the same source copy:
+
+| Subagent | Job | Tools it relies on |
+|---|---|---|
+| `content-translator` | Translates raw copy and adapts idioms, tone, and cultural nuances for each target locale | Localization memory lookup, translation lexicon |
+| `seo-locale-analyzer` | Analyzes keywords, metadata length, and search intent for target regional search engines | Keyword density checker, regex pattern matchers |
+
+Run `/localization-toolkit:localize-content <source-file> <locale> [<locale> ...]` to translate into each locale in parallel, run regional SEO analysis, then apply the fixes. The `locale-style-guide` skill and a placeholder-check hook come with it.
+
+### Layout
+
+```
+.claude-plugin/
+  plugin.json        # manifest (only manifest files live here)
+agents/              # subagents
+data/                # translation memory + lexicon
+commands/            # workflow command
+skills/              # skills (skills/<name>/SKILL.md)
+hooks/               # hooks/hooks.json
+scripts/             # bundled scripts, referenced via ${CLAUDE_PLUGIN_ROOT}
+course-api/          # Express API used as a test target
+```
+
+### Local testing
+
+```
+claude --plugin-dir .
+```
+
+### Install
+
+```
+/plugin marketplace add javelinnathan/claude-multi-agent-workflow
+/plugin install localization-toolkit@localization-marketplace
+```
